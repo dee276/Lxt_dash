@@ -1,5 +1,6 @@
 import pandas as pd
 import sqlite3
+#breakpoint()
 conn = sqlite3.connect("employee.db")
 cursor = conn.cursor()
 commit = conn.commit()
@@ -11,6 +12,7 @@ table_transcripteur = """ CREATE TABLE IF NOT EXISTS transcripteurs(
                     id INTEGER PRIMARY KEY,
                     nom TEXT NOT NULL UNIQUE,
                     page_id INTEGER,
+                    langue TEXT
                     actif CHAR(1)
                     );"""
 
@@ -29,11 +31,12 @@ table_resultat_hebdo = """ CREATE TABLE IF NOT EXISTS resultats(
 
 
 cursor.execute(table_transcripteur)
+cursor.execute(table_resultat_hebdo)
 
 df = pd.read_csv("transcripteur.csv")
 #print(df)
 df.columns = df.columns.str.lower()
-df_transcripteurs = df[['id','nom','page_id','actif']]
+df_transcripteurs = df[['id','nom','page_id','langue','actif']]
 df_transcripteurs.to_sql('transcripteurs',conn, if_exists='replace', index=False)
 #conn.execute(table_resultat_hebdo)
 
