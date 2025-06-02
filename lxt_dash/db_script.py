@@ -6,7 +6,7 @@ cursor = conn.cursor()
 commit = conn.commit()
 roll = conn.rollback()
 
-conn.execute("""drop table transcripteurs""")
+#conn.execute("""drop table transcripteurs""")
 
 table_transcripteur = """ CREATE TABLE IF NOT EXISTS transcripteurs(
                     id INTEGER PRIMARY KEY,
@@ -30,19 +30,20 @@ table_resultat_hebdo = """ CREATE TABLE IF NOT EXISTS resultats(
 #Cette ligne signifie qu'un transcripteur_id doit obligatoirement correspondre à un id de la table transcripteur pour qu'une insertion soit valide
 
 
-cursor.execute(table_transcripteur)
-cursor.execute(table_resultat_hebdo)
+#cursor.execute(table_transcripteur)
+#cursor.execute(table_resultat_hebdo)
 
-df = pd.read_csv("transcripteur.csv")
-#print(df)
-df.columns = df.columns.str.lower()
-df_transcripteurs = df[['id','nom','page_id','langue','actif']]
-df_transcripteurs.to_sql('transcripteurs',conn, if_exists='replace', index=False)
+#df = pd.read_csv("transcripteur.csv")
+df_res = pd.read_sql_query("select *from resultats", conn)
+print(df_res.tail())
+#df.columns = df.columns.str.lower()
+#df_transcripteurs = df[['id','nom','page_id','langue','actif']]
+#df_transcripteurs.to_sql('transcripteurs',conn, if_exists='replace', index=False)
 #conn.execute(table_resultat_hebdo)
 
-cursor.execute("SELECT *FROM transcripteurs")
-for line in cursor.fetchall():
-    print(line)
+#cursor.execute("SELECT *FROM transcripteurs")
+#for line in cursor.fetchall():
+#    print(line)
 
 
 conn.close()

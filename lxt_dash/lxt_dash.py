@@ -40,7 +40,9 @@ app.layout = html.Div([
             dcc.Tab(label=langue, value=langue) for langue in langues
             ]
         ),
-    html.Div(id = "tableau-langue")
+    html.Div(id = "tableau-langue"),
+    html.Div(id = "graph-transcripteur"),
+    html.Div(id = "graph-comparatif")
 
     ])
 
@@ -50,16 +52,21 @@ app.layout = html.Div([
         Input("tabs-langue","value")
         )
 def afficher_tableau(langue_choisie):
-    df_filtré = df_tr[df_tr["langue"] == langue_choisie]
+    df_filtré = df_tr[df_tr["langue"] == langue_choisie].drop(columns=["page_id"])
     return dag.AgGrid(
-            id=f"grid-{langue_choisie}",
-            rowData=df_filtré.to_dict("records"),
-            columnDefs=[{"field":col}for col in df_filtré.columns],
-            columnSize="sizeToFit",
-            defaultColDef={"sortable":True,"filter":True,"resizable":True},
-            style={"height":"400px","width":"100%"}
-            )
+        id=f"grid-{langue_choisie}",
+        rowData=df_filtré.to_dict("records"),
+        columnDefs=[{"field": col} for col in df_filtré.columns],
+        columnSize="sizeToFit",
+        defaultColDef={"sortable": True, "filter": True, "resizable": True},
+        style={"height": "400px", "width": "100%"}
+    )
 
+@callback(
+        Output("graph-transcripteur","children"),
+        Input("","value")
+        )
+def afficher_stat_transcripteur(transcripteur):
 
 if __name__ == '__main__':
     app.run(debug=True)
