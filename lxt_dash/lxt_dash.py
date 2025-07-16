@@ -9,13 +9,9 @@ conn = sqlite3.connect("employee.db")
 df_tr = pd.read_sql_query("SELECT * FROM transcripteurs", conn)
 df_res = pd.read_sql_query("SELECT * FROM resultats_journaliers", conn)
 
-# S'assurer que la colonne jour est bien de type datetime
 df_res["jour"] = pd.to_datetime(df_res["jour"])
-
-# Liste des langues uniques
 langues = df_tr["langue"].unique()
 
-# Application Dash
 app = Dash()
 
 app.layout = html.Div([
@@ -30,7 +26,6 @@ app.layout = html.Div([
     html.Div(id="tableau-langue"),
 
     html.Br(),
-
     html.Div([
         html.Label("Mode d'affichage :"),
         dcc.RadioItems(
@@ -46,7 +41,6 @@ app.layout = html.Div([
     ]),
 
     html.Br(),
-
     html.Label("Plage de dates :"),
     dcc.DatePickerRange(
         id="filtre-dates",
@@ -98,6 +92,8 @@ def afficher_stat_transcripteur(selected_rows_all, mode, start_date, end_date):
     if df_filtré.empty:
         return html.Div("Aucune donnée disponible.")
 
+    df_filtré["jour"] = pd.to_datetime(df_filtré["jour"])
+
     # Appliquer le filtre de dates
     if start_date and end_date:
         df_filtré = df_filtré[
@@ -108,7 +104,7 @@ def afficher_stat_transcripteur(selected_rows_all, mode, start_date, end_date):
     if df_filtré.empty:
         return html.Div("Aucune donnée dans cette plage.")
 
-    # Définir la période selon le mode
+    # Appliquer le regroupement
     if mode == "jour":
         df_filtré["periode"] = df_filtré["jour"]
     elif mode == "semaine":
@@ -124,7 +120,6 @@ def afficher_stat_transcripteur(selected_rows_all, mode, start_date, end_date):
         "productivite": "mean"
     }).reset_index()
 
-    # Génération des graphiques
     figs = []
     for col in ["vitesse_h", "qualite", "productivite"]:
         fig = px.line(
@@ -132,6 +127,33 @@ def afficher_stat_transcripteur(selected_rows_all, mode, start_date, end_date):
             title=f"{col.capitalize()} - {mode} - {nom or transcripteur_id}"
         )
         figs.append(dcc.Graph(figure=fig))
+
+    # 4e graphique — Comparaison avec la moyenne de la langue
+    langue_transcripteur = df_tr[df_tr["id"] == transcripteur_id]["langue"].values[0]
+
+    df_langue = df_res[
+        (df_res["jour"] >= pd.to_datetime(start_date)) &
+        (df_res["jour"] <= pd.to_datetime(end_date))
+    ]
+    df_langue = df_langue.merge(df_tr[["id", "langue"]], left_on="transcripteur_id", right_on="id")
+    df_langue = df_langue[df_langue["langue"] == langue_transcripteur]
+
+    moy_tr = df_filtré[["vitesse_h", "qualite", "productivite"]].mean()
+    moy_langue = df_langue[["vitesse_h", "qualite", "productivite"]].mean()
+
+    df_comp = pd.DataFrame({
+        "Métrique": ["Vitesse", "Qualité", "Productivité"],
+        nom or str(transcripteur_id): [moy_tr["vitesse_h"], moy_tr["qualite"], moy_tr["productivite"]],
+        f"Moyenne ({langue_transcripteur})": [moy_langue["vitesse_h"], moy_langue["qualite"], moy_langue["productivite"]]
+    })
+
+    fig_comp = px.bar(
+        df_comp, x="Métrique", barmode="group",
+        y=[nom or str(transcripteur_id), f"Moyenne ({langue_transcripteur})"],
+        title="Comparaison : Transcripteur vs Moyenne de la langue"
+    )
+
+    figs.append(dcc.Graph(figure=fig_comp))
 
     return figs
 
