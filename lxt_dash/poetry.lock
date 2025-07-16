@@ -206,6 +206,24 @@ dev = ["dash[ci,dev,testing] (>=2.0)", "dash_mantine_components (==0.12.1)", "py
 docs = ["colorlover", "dash (>=2.9.0)", "dash-bootstrap-components (>=1.0.0)", "dash-iconify", "dash-mantine-components", "gunicorn (>=19.9.0)", "pandas (>=1.2.3)", "pyyaml (>=6.0)", "statsmodels", "yfinance"]
 
 [[package]]
+name = "dash-bootstrap-components"
+version = "2.0.3"
+description = "Bootstrap themed components for use in Plotly Dash"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "dash_bootstrap_components-2.0.3-py3-none-any.whl", hash = "sha256:82754d3d001ad5482b8a82b496c7bf98a1c68d2669d607a89dda7ec627304af5"},
+    {file = "dash_bootstrap_components-2.0.3.tar.gz", hash = "sha256:5c161b04a6e7ed19a7d54e42f070c29fd6c385d5a7797e7a82999aa2fc15b1de"},
+]
+
+[package.dependencies]
+dash = ">=3.0.4"
+
+[package.extras]
+pandas = ["numpy (>=2.0.2)", "pandas (>=2.2.3)"]
+
+[[package]]
 name = "flask"
 version = "3.1.1"
 description = "A simple framework for building complex web applications."
@@ -763,4 +781,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "e917a38a27f76965ffb8f228508ecaa0e6ced362b0f4411bab637970f7a28cbd"
+content-hash = "ed31d7d19ecc3e10988daefc660123ecf20fb6dd76dd4136e934e9ed048c906e"
