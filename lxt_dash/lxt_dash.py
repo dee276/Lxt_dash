@@ -158,6 +158,15 @@ def afficher_stat_transcripteur(selected_rows_all, mode, start_date, end_date):
     return figs
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+#if __name__ == '__main__':
+#    app.run(debug=True)
 
+
+#new import
+import os
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8050))
+    app.run(host="0.0.0.0", port=port, debug=False)
+
+#end of import
