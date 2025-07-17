@@ -206,6 +206,21 @@ dev = ["dash[ci,dev,testing] (>=2.0)", "dash_mantine_components (==0.12.1)", "py
 docs = ["colorlover", "dash (>=2.9.0)", "dash-bootstrap-components (>=1.0.0)", "dash-iconify", "dash-mantine-components", "gunicorn (>=19.9.0)", "pandas (>=1.2.3)", "pyyaml (>=6.0)", "statsmodels", "yfinance"]
 
 [[package]]
+name = "dash-auth"
+version = "2.0.0"
+description = "Dash Authorization Package."
+optional = false
+python-versions = ">=3.6"
+groups = ["main"]
+files = [
+    {file = "dash_auth-2.0.0-py3-none-any.whl", hash = "sha256:32e60a700937d2c59e983a17d9422752da0f4eaabfd7a8babcae1b4266b9a95f"},
+    {file = "dash_auth-2.0.0.tar.gz", hash = "sha256:d9eafb8f3e1f1580bcf90023f8a5915f8f44ee07d80e35490b32f3548da49cc5"},
+]
+
+[package.dependencies]
+dash = ">=1.1.1"
+
+[[package]]
 name = "dash-bootstrap-components"
 version = "2.0.3"
 description = "Bootstrap themed components for use in Plotly Dash"
@@ -781,4 +796,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "ed31d7d19ecc3e10988daefc660123ecf20fb6dd76dd4136e934e9ed048c906e"
+content-hash = "cd65fe6f0f22b3659481a0b862bedc287eecd777fc14f52201b207be3256009f"

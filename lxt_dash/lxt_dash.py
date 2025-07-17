@@ -3,6 +3,11 @@ import plotly.express as px
 import pandas as pd
 import dash_ag_grid as dag
 import sqlite3
+import dash_auth
+
+VALID_USERNAME_PASSWORD_PAIRS = {
+        'admin':'admin'
+        }
 
 # Connexion à la base de données
 conn = sqlite3.connect("employee.db")
@@ -13,6 +18,11 @@ df_res["jour"] = pd.to_datetime(df_res["jour"])
 langues = df_tr["langue"].unique()
 
 app = Dash()
+auth = dash_auth.BasicAuth(
+        app,
+        VALID_USERNAME_PASSWORD_PAIRS
+        )
+
 
 app.layout = html.Div([
     html.H2("Tableau des transcripteurs"),
